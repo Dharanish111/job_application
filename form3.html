@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 60%;
+            max-width: 1000px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh; /* Ensure it doesn't take up the entire height of the viewport */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        select,
+        input[type="text"],
+        input[type="file"],
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 95%;
+            padding: 12px;
+            margin: 10px -50;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        select:focus,
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            border-color: #4e73df;
+            outline: none;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f1f1f1;
+        }
+
+        .input-field:focus {
+            border-color: #4CAF50;
+            background-color: #fff;
+            outline: none;
+        }
+
+        .required {
+            color: #ff0000;
+        }
+
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h3 {
+            text-align: center;
+            color: #4783d1;
+            font-family: 'Roboto', sans-serif;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            font-size: 40px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .form-footer input[type="submit"] {
+            padding: 12px 25px;
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-footer input[type="submit"]:hover {
+            background-color: #2e59d9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group input[type="file"] {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .next-btn,
+        .back-btn {
+            padding: 12px 25px;
+            font-size: 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .next-btn {
+            background-color: #669ed3;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            float: right;
+
+        }
+
+        .next-btn:hover {
+            background-color: #0f80e9;
+
+        }
+
+        .back-btn {
+            background-color: #6457574d;
+            color: white;
+            float: left;
+
+        }
+
+        .back-btn:hover {
+            background-color: #e77957;
+        }
+
+        .next-btn:focus {
+            outline: none;
+        }
+
+        .logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 150px;
+        }
+
+        .required {
+            color: red;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            width: 98%;
+            padding: 8px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Ensures proper alignment */
+        }
+
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <style>
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .form-footer {
+            margin-top: 20px;
+        }
+        .next-btn, .back-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Personal Information Form (Page 1) -->
+        <div id="personalInfoForm" class="form-container" style="display: block;">
+            <h3>Job Application Form</h3>
+            <form>
+                <!-- First Name and Last Name Side-by-Side -->
+                <div class="card">
+                    <div class="form-group">
+                        <label for="firstName">First Name: <span class="required">*</span></label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name: <span class="required">*</span></label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                
+                <!-- Gender, DOB, and Phone -->
+                <div class="card">
+                    <div class="form-group">
+                        <label for="gender">Gender (Optional):</label>
+                        <select id="gender" name="gender" style="width: 98%;" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth: <span class="required">*</span></label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number (Personal): <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div class="card">
+                    <div class="form-group">
+                        <label for="address">Permanent Address: <span class="required">*</span></label>
+                        <textarea id="address" name="address" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="Permanent-pincode">Permanent Pincode: <span class="required">*</span></label>
+                        <input type="text" id="Permanent-pincode" name="Permanent-pincode" required>
+                    </div>
+                </div>
+
+                <!-- State and District Selection -->
+                <div class="card">
+                    <div class="form-group">
+                        <label for="Permanent-state">Permanent State: <span class="required">*</span></label>
+                        <select id="Permanent-state" name="Permanent-state" style="width: 98%;" required>
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Permanent-district">Permanent District: <span class="required">*</span></label>
+                        <select id="Permanent-district" name="Permanent-district" style="width: 98%;" required>
+                            <option value="">Select District</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- File Uploads: PAN Card and Aadhaar Card -->
+                <div class="card">
+                    <div class="form-group">
+                        <label for="pan-card">Upload PAN Card: <span class="required">*</span></label>
+                        <input type="file" id="pan-card" name="pan-card" accept=".jpg, .jpeg, .png, .pdf" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaar-card">Upload Aadhaar Card: <span class="required">*</span></label>
+                        <input type="file" id="aadhaar-card" name="aadhaar-card" accept=".jpg, .jpeg, .png, .pdf" required>
+                    </div>
+                </div>
+
+                <!-- Next Button -->
+                <div class="form-footer">
+                    <button type="button" class="next-btn" onclick="nextForm('jobInfoForm')">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Job-Related Information Form (Page 2) -->
+        <div id="jobInfoForm" class="form-container" style="display: none;">
+            <h3>Job-Related Information</h3>
+            <form>
+                <div class="form-group">
+                    <label for="jobTitle">Job Title:</label>
+                    <input type="text" id="jobTitle" name="jobTitle" value="Associate Software Developer" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department/Team: <span style="color: red;">*</span></label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date: <span style="color: red;">*</span></label>
+                    <input type="date" id="startDate" name="startDate" required>
+                </div>
+                <div class="form-group" style="width: 750px;">
+                    <label for="workLocation">Work Location: <span style="color: red;">*</span></label>
+                    <select id="workLocation" name="workLocation" required>
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="pune">Pune</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="width: 750px;">
+                    <label for="employmentType">Employment Type: <span style="color: red;">*</span></label>
+                    <select id="employmentType" name="employmentType" required>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary or Hourly Rate (if applicable): <span style="color: red;">*</span></label>
+                    <input type="text" id="salary" name="salary" required>
+                </div>
+                <div class="form-group" style="width: 750px;">
+                    <label for="workSchedule">Work Schedule: <span style="color: red;">*</span></label>
+                    <select id="workSchedule" name="workSchedule" required>
+                        <option value="full-time">Full-time</option>
+                        <option value="flexible">Flexible hours</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="width: 725px;">
+                    <label for="uploadDoc">Upload Document (e.g., Certificates): <span style="color: red;">*</span></label>
+                    <input type="file" id="uploadDoc" name="uploadDoc" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('personalInfoForm')">Back</button>
+                    <button type="button" class="next-btn" onclick="nextForm('workExperienceQuestion')">Next</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Work Experience Question (Page 3) -->
+        <div id="workExperienceQuestion" class="form-container" style="display: none;">
+            <h3>Do you have any work experience?</h3>
+            <form>
+                <div class="form-group">
+                    <label for="hasWorkExperience">Select Yes or No:</label>
+                    <select id="hasWorkExperience" name="hasWorkExperience" onchange="handleWorkExperienceChange()" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('jobInfoForm')">Back</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Work Experience Form (Page 4) -->
+        <div id="workExperienceForm" class="form-container" style="display: none;">
+            <h3 class="form-title">Work Experience (if applicable)</h3>
+            <form>
+                <div class="form-group">
+                    <label for="previousJobTitle">Previous Job Title: <span class="required">*</span></label>
+                    <input type="text" id="previousJobTitle" name="previousJobTitle" required placeholder="Enter your previous job title">
+                </div>
+                <div class="form-group">
+                    <label for="companyName">Company Name: <span class="required">*</span></label>
+                    <input type="text" id="companyName" name="companyName" required placeholder="Enter your company name">
+                </div>
+                <div class="form-group">
+                    <label for="employmentDuration">Duration of Employment (Start Date – End Date or Present): <span class="required">*</span></label>
+                    <input type="text" id="employmentDuration" name="employmentDuration" required placeholder="e.g., Jan 2020 – Dec 2022 or Present">
+                </div>
+                <div class="form-group">
+                    <label for="responsibilities">Responsibilities & Achievements: <span class="required">*</span></label>
+                    <textarea id="responsibilities" name="responsibilities" rows="4" required placeholder="Describe your key responsibilities and achievements"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="technologiesUsed">Technologies Used: <span class="required">*</span></label>
+                    <input type="text" id="technologiesUsed" name="technologiesUsed" required placeholder="Enter technologies you worked with">
+                </div>
+                <div class="form-group">
+                    <label for="tools">Preferred Development Tools & IDEs: <span class="required">*</span></label>
+                    <input type="text" id="tools" name="tools" required placeholder="Preferred Development Tools & IDEs">
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('workExperienceQuestion')">Back</button>
+                    <button type="button" class="next-btn" onclick="handleFormSubmit(event)">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Submit Section (Page 5) -->
+        <div id="submitSection" class="form-container" style="display: none;">
+            <h3>Submit your information</h3>
+            <p>Thank you for completing the form!</p>
+            <button type="button" class="next-btn" onclick="handleFormSubmit(event)">Submit Application</button>
+        </div>
+
+        <script>
+            function nextForm(formId) {
+                // Hide all forms
+                document.querySelectorAll('.form-container').forEach(form => form.style.display = 'none');
+                // Show the selected form
+                document.getElementById(formId).style.display = 'block';
+            }
+        
+            function backForm(formId) {
+                // Hide all forms
+                document.querySelectorAll('.form-container').forEach(form => form.style.display = 'none');
+                // Show the selected form
+                document.getElementById(formId).style.display = 'block';
+            }
+        
+            function handleWorkExperienceChange() {
+                const workExperienceSelect = document.getElementById("hasWorkExperience");
+                const workExperienceForm = document.getElementById("workExperienceForm");
+                const workExperienceQuestion = document.getElementById("workExperienceQuestion");
+                const submitSection = document.getElementById("submitSection");
+        
+                if (workExperienceSelect.value === "yes") {
+                    // Hide the work experience question and show the work experience form
+                    workExperienceQuestion.style.display = "none";
+                    workExperienceForm.style.display = "block";
+                } else if (workExperienceSelect.value === "no") {
+                    // Hide the work experience question and show the submit section
+                    workExperienceForm.style.display = "none";
+                    workExperienceQuestion.style.display = "none";
+                    submitSection.style.display = "block";
+                }
+            }
+
+            // Handle form submission
+            function handleFormSubmit(event) {
+                event.preventDefault(); // Prevent form from submitting the default way
+                
+                alert("Form submitted successfully!");
+
+                // Reset all forms or navigate to another form
+                nextForm('personalInfoForm');
+            }
+        </script>
+    </div>
+
+</body>
+
+</html>
