@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Employee Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f6f7f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh; /* Ensure it doesn't take up the entire height of the viewport */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        select,
+        input[type="text"],
+        input[type="file"],
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 95%;
+            padding: 12px;
+            margin: 10px -50;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        select:focus,
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            border-color: #4e73df;
+            outline: none;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-container {
+            display: none;
+            transition: transform 0.3s ease-in-out;
+            height: auto;
+            max-height: 80vh; /* Set max height to ensure content doesn't overflow */
+            overflow-y: auto; /* Allow scrolling within each form if the content is too long */
+            margin-left: -15px;
+            width: 850px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-direction: column;
+        }
+
+        .form-footer input[type="submit"] {
+            padding: 12px 25px;
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-footer input[type="submit"]:hover {
+            background-color: #2e59d9;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group input[type="file"] {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .next-btn,
+        .back-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .next-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .next-btn:hover {
+            background-color: #218838;
+        }
+
+        .back-btn {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 150px;
+        }
+
+        .job-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+
+            
+        }
+
+        .job-card {
+            background-color: white;
+            border-radius: 1px;
+            box-shadow: 4px 4px 6px rgba(35, 15, 219, 0.1);
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            border: 2px solid #094c74;
+            align-items: center;
+            height: 550px;
+
+        }
+
+        .job-card img {
+            width: 116%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+            transform: translateX(-7%) translateY(-10.5%);
+
+        }
+
+        .job-card h3 {
+            font-size: 1.5em;
+            margin: -10px 0;
+            color: #333;
+            
+        }
+
+        .job-card p {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 15px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .job-card button {
+            padding: 10px 30px;
+            font-size: 1em;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .job-card button:hover {
+            background-color: #0056b3;
+        }
+
+        #roleSelectContainer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #roleSelect {
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            width: 250px;
+        }
+
+        /* Custom Icon Colors */
+        .fa-briefcase {
+            color: #4CAF50; /* Green for Experience */
+        }
+        .fa-cogs {
+            color: #FF9800; /* Orange for Skills */
+        }
+        .fa-map-marker {
+            color: #2196F3; /* Blue for Location */
+        }
+        .fa-graduation-cap {
+            color: #9C27B0; /* Purple for Education */
+        }
+        .fa-clock {
+            color: #FF5722; /* Red for Availability */
+        }
+
+
+        /* Importing a stylish, unique font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap'); /* Example: Playfair Display */
+
+        /* Styling the h1 */
+        h1 {
+            font-size: 72px; /* Large font size */
+            color: #4598cf; /* Green color for the text */
+            text-align: center; /* Center-align the text */
+            margin-top: -20px; /* Adjust top margin for positioning */
+            margin-bottom: 5px; /* Slight bottom margin */
+            font-family: 'Playfair Display', serif; /* Unique, elegant serif font */
+            font-weight: 700; /* Bold font weight for emphasis */
+            letter-spacing: 1px; /* Adds slight spacing between characters */
+            text-transform: uppercase; /* Uppercase letters for a stylish look */
+            line-height: 1.2; /* Adjust line height for readability */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle text shadow for added depth */
+
+        /* Adding a box around the h1 */
+            background-color: #f0f8ff; /* Light blue background color for the box */
+            padding: 20px; /* Space between the text and the box edges */
+            border: 1 solid #4598cf; /* Border with the same color as the text */
+            border-radius: 5px; /* Rounded corners for the box */
+            width: auto;
+        }
+
+        /* Add responsiveness for smaller screens */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 48px; /* Adjust font size for smaller screens */
+            }
+        }
+
+
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .form-footer {
+            margin-top: 20px;
+        }
+        .next-btn, .back-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Careers</h1>
+
+
+        <!-- Job Application Section -->
+        <div class="job-cards-container">
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://bairesdev.mo.cloudinary.net/blog/2022/08/portrait-of-a-man-using-a-computer-in-a-modern-office-picture-id1344688156-1.jpg?tx=w_1920,q_auto" alt="Software Developer">
+                
+                <!-- Job Title -->
+                <h3>Software Developer</h3>
+                
+                <!-- Job Description -->
+                <p>Join our team as a software developer and build amazing products with cutting-edge technologies.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i>  1-3 years</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i>  Java, Python, SQL, Agile</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i>  Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i>    Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: 15px;">Apply Now</button>
+                <!-- Button to go back to the previous page -->
+            </div>
+
+            <!-- DevOps Engineer Card -->
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSbKyK6t3p8hvszxVKUew_kRZUgr_r-FQuA&s" alt="DevOps Engineer">
+                
+                <!-- Job Title -->
+                <h3>DevOps Engineer</h3>
+                
+                <!-- Job Description -->
+                <p>Manage and automate software deployment processes for a seamless experience.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">showPersonalInfoFo
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i>  3+ years</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i> Docker, Kubernetes, CI/CD, AWS, Linux</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i> Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i> Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: -1px;">Apply Now</button>
+            </div>
+
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-gtDVh4JpMqcgq8clIrf6HP4tOUDCG_V5JQ&s" alt="Frontend Developer">
+                
+                <!-- Job Title -->
+                <h3>Frontend Developer</h3>
+                
+                <!-- Job Description -->
+                <p>Design and develop interactive, user-friendly web interfaces with a focus on performance and usability.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i>  Fresher</p> <!-- Or change "Fresher" to "Experienced" as needed -->
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i> HTML, CSS, JavaScript, React, Vue.js, Responsive Design</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i> Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i> Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: 15px;">Apply Now</button>
+            </div>
+            
+            
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://www.shutterstock.com/image-photo/code-background-web-programming-ruby-600nw-2207966785.jpg" alt="Backend Developer">
+                
+                <!-- Job Title -->
+                <h3>Backend Developer</h3>
+                
+                <!-- Job Description -->
+                <p>Build powerful APIs and optimize server-side logic for our scalable web applications.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i> 2+ years</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i> Node.js, Python, Java, SQL, RESTful APIs, Microservices</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i> Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i> Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: 15px;">Apply Now</button>
+            </div>
+            
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_M1Yt9R43yeePykJWmJ3zJdQMy3YOLMQnnw&s" alt="Mobile App Developer">
+                
+                <!-- Job Title -->
+                <h3>Mobile App Developer</h3>
+                
+                <!-- Job Description -->
+                <p>Create native mobile applications for Android and iOS with the latest technologies.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i> 1+ years</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i> Flutter, React Native, Swift, Kotlin, Android, iOS</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i> Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science </p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i> Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: 15px;">Apply Now</button>
+            </div>
+            
+            <div class="job-card">
+                <!-- Job Role Image -->
+                <img src="https://t4.ftcdn.net/jpg/05/18/53/19/360_F_518531918_oYY8KSe4BpIPHLWVx46UaOqddEdviSD6.jpg" alt="Software Testing">
+                
+                <!-- Job Title -->
+                <h3>Software Testing</h3>
+                
+                <!-- Job Description -->
+                <p>Join our testing team to ensure the quality and functionality of our software products.</p>
+                
+                <!-- Candidate Information Section -->
+                <div class="candidate-details">
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-briefcase"></i> 2+ years</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-cogs"></i> Manual Testing, Automation Testing, JIRA, Bug Tracking</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-map-marker"></i> Remote</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-graduation-cap"></i>  B.Tech in Computer Science</p>
+                    <p style="margin: 0; padding: 0;"><i class="fa fa-clock"></i> Immediate</p>
+                </div>
+                
+                <!-- Apply Now Button -->
+                <button onclick="window.location.href='form3.html'" style="margin-top: 15px;">Apply Now</button>
+            </div>
+            
+        </div>  
+
+
+        <!-- Personal Information Form (Page 1) -->
+        <div id="personalInfoForm" class="form-container">
+            <h3>Personal Information</h3>
+            <form>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="gender">Gender (Optional):</label>
+                    <select id="gender" name="gender" style="width: 820px;">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number (Personal):</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alt-phone">Alternate Phone Number:</label>
+                    <input type="tel" id="alt-phone" name="alt-phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Personal Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Current Address:</label>
+                    <textarea id="address" name="address" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="current-pincode">Current Pincode:</label>
+                    <input type="text" id="current-pincode" name="current-pincode" required>
+                </div>
+                
+                <div class="form-group" style="width: 862px;">
+                    <label for="current-state">Current State:</label>
+                    <select id="current-state" name="current-state" required>
+                        <option value="">Select State</option>
+                        <!-- States List -->
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="width: 862px;">
+                    <label for="current-district">Current District:</label>
+                    <select id="current-district" name="current-district" required>
+                        <option value="">Select District</option>
+                        <!-- Districts List -->
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Adilabad">Adilabad</option>
+                        <option value="Jagtial">Jagtial</option>
+                        <option value="Jangaon">Jangaon</option>
+                        <option value="Jayashankar Bhoopalapally">Jayashankar Bhoopalapally</option>
+                        <option value="Jogulamba Gadwal">Jogulamba Gadwal</option>
+                        <option value="Kamareddy">Kamareddy</option>
+                        <option value="Karimnagar">Karimnagar</option>
+                        <option value="Khammam">Khammam</option>
+                        <option value="Kothagudem">Kothagudem</option>
+                        <option value="Mahabubnagar">Mahabubnagar</option>
+                        <option value="Mahabubabad">Mahabubabad</option>
+                        <option value="Mancherial">Mancherial</option>
+                        <option value="Medak">Medak</option>
+                        <option value="Medchal-Malkajgiri">Medchal-Malkajgiri</option>
+                        <option value="Mulugu">Mulugu</option>
+                        <option value="Nagarkurnool">Nagarkurnool</option>
+                        <option value="Nalgonda">Nalgonda</option>
+                        <option value="Nirmal">Nirmal</option>
+                        <option value="Nizamabad">Nizamabad</option>
+                        <option value="Peddapalli">Peddapalli</option>
+                        <option value="Rajanna Sircilla">Rajanna Sircilla</option>
+                        <option value="Rangareddy">Rangareddy</option>
+                        <option value="Sangareddy">Sangareddy</option>
+                        <option value="Siddipet">Siddipet</option>
+                        <option value="Suryapet">Suryapet</option>
+                        <option value="Vikarabad">Vikarabad</option>
+                        <option value="Warangal Urban">Warangal Urban</option>
+                        <option value="Warangal Rural">Warangal Rural</option>
+                        <option value="Wanaparthy">Wanaparthy</option>
+                        <option value="Yadadri Bhuvanagiri">Yadadri Bhuvanagiri</option>
+                        
+
+                    </select>
+                </div>
+                
+                <hr>
+                
+                <div class="form-group">
+                    <label for="permanent-address">Permanent Address:</label>
+                    <textarea id="permanent-address" name="permanent-address" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="permanent-pincode">Permanent Pincode:</label>
+                    <input type="text" id="permanent-pincode" name="permanent-pincode" required>
+                </div>
+                
+                <div class="form-group" style="width: 862px;">
+                    <label for="permanent-state">Permanent State:</label>
+                    <select id="permanent-state" name="permanent-state" required>
+                        <option value="">Select State</option>
+                        <!-- States List -->
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="width: 862px;">
+                    <label for="permanent-district">Permanent District:</label>
+                    <select id="permanent-district" name="permanent-district" required>
+                        <option value="">Select District</option>
+                        <!-- Districts List -->
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Adilabad">Adilabad</option>
+                        <option value="Jagtial">Jagtial</option>
+                        <option value="Jangaon">Jangaon</option>
+                        <option value="Jayashankar Bhoopalapally">Jayashankar Bhoopalapally</option>
+                        <option value="Jogulamba Gadwal">Jogulamba Gadwal</option>
+                        <option value="Kamareddy">Kamareddy</option>
+                        <option value="Karimnagar">Karimnagar</option>
+                        <option value="Khammam">Khammam</option>
+                        <option value="Kothagudem">Kothagudem</option>
+                        <option value="Mahabubnagar">Mahabubnagar</option>
+                        <option value="Mahabubabad">Mahabubabad</option>
+                        <option value="Mancherial">Mancherial</option>
+                        <option value="Medak">Medak</option>
+                        <option value="Medchal-Malkajgiri">Medchal-Malkajgiri</option>
+                        <option value="Mulugu">Mulugu</option>
+                        <option value="Nagarkurnool">Nagarkurnool</option>
+                        <option value="Nalgonda">Nalgonda</option>
+                        <option value="Nirmal">Nirmal</option>
+                        <option value="Nizamabad">Nizamabad</option>
+                        <option value="Peddapalli">Peddapalli</option>
+                        <option value="Rajanna Sircilla">Rajanna Sircilla</option>
+                        <option value="Rangareddy">Rangareddy</option>
+                        <option value="Sangareddy">Sangareddy</option>
+                        <option value="Siddipet">Siddipet</option>
+                        <option value="Suryapet">Suryapet</option>
+                        <option value="Vikarabad">Vikarabad</option>
+                        <option value="Warangal Urban">Warangal Urban</option>
+                        <option value="Warangal Rural">Warangal Rural</option>
+                        <option value="Wanaparthy">Wanaparthy</option>
+                        <option value="Yadadri Bhuvanagiri">Yadadri Bhuvanagiri</option>
+                    </select>
+                </div>
+                
+                <div class="form-footer">
+                    <button type="button" class="next-btn" onclick="nextForm('jobInfoForm')">Next</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Job-Related Information Form (Page 2) -->
+        <div id="jobInfoForm" class="form-container">
+            <h3>Job-Related Information</h3>
+            <form>
+                <div class="form-group">
+                    <label for="jobTitle">Job Title:</label>
+                    <input type="text" id="jobTitle" name="jobTitle" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department/Team:</label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                </div>
+                <div class="form-group" style="width: 862px;">
+                    <label for="workLocation">Work Location:</label>
+                    <select id="workLocation" name="workLocation">
+                        <option value="hyderabad">Hyderabad</option>
+                        <option value="pune">Pune</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                </div>
+               
+                <div class="form-group" style="width: 862px;">
+                    <label for="employmentType">Employment Type:</label>
+                    <select id="employmentType" name="employmentType">
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary or Hourly Rate (if applicable):</label>
+                    <input type="text" id="salary" name="salary">
+                </div>
+                <div class="form-group" style="width: 862px;">
+                    <label for="workSchedule">Work Schedule:</label>
+                    <select id="workSchedule" name="workSchedule">
+                        <option value="full-time">Full-time</option>
+                        <option value="flexible">Flexible hours</option>
+                    </select>
+                </div>
+                
+
+                <div class="form-group" style="width: 838px;">
+                    <label for="uploadDoc">Upload Document (e.g., Certificates):</label>
+                    <input type="file" id="uploadDoc" name="uploadDoc" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('personalInfoForm')">Back</button>
+                    <button type="button" class="next-btn" onclick="nextForm('professionalInfoForm')">Next</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Professional Information Form (Page 3) -->
+        <div id="professionalInfoForm" class="form-container">
+            <h3>Professional Information</h3>
+            <form>
+                <div class="form-group">
+                    <label for="education">Highest Level of Education Completed(e.g., Bachelor's degree, Master's degree):</label>
+                    <input type="text" id="education" name="education" required placeholder="Enter your Degree">
+                </div>
+                <div class="form-group">
+                    <label for="education">University/College Name:</label>
+                    <input type="text" id="education" name="education" required placeholder="Enter your College Name">
+                </div>
+                <div class="form-group">
+                    <label for="collegeYear">Year of Graduation:</label>
+                    <input type="text" id="collegeYear" name="collegeYear" placeholder="Enter your year of graduation">
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <input type="text" id="department" name="department" placeholder="Enter your department">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cgpa">CGPA:</label>
+                    <input type="text" id="cgpa" name="cgpa" placeholder="Enter your CGPA">
+                </div>
+                <div class="form-group">
+                    <label for="certifications">Relevant Certifications (if applicable):</label>
+                    <input type="text" id="certifications" name="certifications">
+                </div>
+                
+                
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('jobInfoForm')">Back</button>
+                    <button type="button" class="next-btn" onclick="nextForm('workExperienceForm')">Next</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Work Experience Form (Page 4) -->
+        <div id="workExperienceForm" class="form-container">
+            <h3>Work Experience (if applicable)</h3>
+            <form>
+                <div class="form-group">
+                    <label for="previousJobTitle">Previous Job Title:</label>
+                    <input type="text" id="previousJobTitle" name="previousJobTitle" required placeholder="Enter your previous job title">
+                </div>
+                <div class="form-group">
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName" name="companyName" required placeholder="Enter your company name">
+                </div>
+                <div class="form-group">
+                    <label for="employmentDuration">Duration of Employment (Start Date – End Date or Present):</label>
+                    <input type="text" id="employmentDuration" name="employmentDuration" required placeholder="e.g., Jan 2020 – Dec 2022 or Present">
+                </div>
+                <div class="form-group">
+                    <label for="responsibilities">Responsibilities & Achievements (brief overview of tasks and accomplishments):</label>
+                    <textarea id="responsibilities" name="responsibilities" rows="4" required placeholder="Describe your key responsibilities and achievements"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="technologiesUsed">Technologies Used (list relevant programming languages, Skills, or frameworks):</label>
+                    <input type="text" id="technologiesUsed" name="technologiesUsed" required placeholder="Enter technologies you worked with">
+                </div>
+            
+                <div class="form-group">
+                    <label for="tools">Preferred Development Tools & IDEs:</label>
+                    <input type="text" id="tools" name="tools" required>
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub/Portfolio/Website (if applicable):</label>
+                    <input type="url" id="github" name="github">
+                </div>
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn Profile (Optional):</label>
+                    <input type="url" id="linkedin" name="linkedin">
+                </div>
+                <div class="form-footer">
+                    <button type="button" class="back-btn" onclick="backForm('professionalInfoForm')">Back</button>
+                    <button type="submit" class="next-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        let selectedRole = ""; // Variable to store the selected role
+
+        function showForm() {
+            const roleSelect = document.getElementById('roleSelect');
+            selectedRole = roleSelect.value; // Capture the selected role
+            
+            const roleSelectContainer = document.getElementById('roleSelectContainer');
+            const personalInfoForm = document.getElementById('personalInfoForm');
+            
+            // Set job title on the job info form based on selected role
+            const jobTitleField = document.getElementById('jobTitle');
+            if (selectedRole === "associate") {
+                jobTitleField.value = "Associate Software Developer";
+            } else if (selectedRole === "senior") {
+                jobTitleField.value = "Senior Developer";
+            }
+
+            roleSelectContainer.style.display = 'none';  // Hide role selection container
+            personalInfoForm.classList.add('active');    // Show personal information form
+        }
+
+        function nextForm(nextFormId) {
+            const currentForm = document.querySelector('.form-container.active');
+            const nextForm = document.getElementById(nextFormId);
+            currentForm.classList.remove('active');
+            nextForm.classList.add('active');
+        }
+
+        function backForm(previousFormId) {
+            const currentForm = document.querySelector('.form-container.active');
+            const previousForm = document.getElementById(previousFormId);
+            currentForm.classList.remove('active');
+            previousForm.classList.add('active');
+        }
+
+        // Function to show the personal information form and hide the job info section
+        function showPersonalInfoForm() {
+            // Hide job info section
+            document.getElementById("jobInfoForm").classList.remove("active");
+            
+            // Show personal information form
+            document.getElementById("personalInfoForm").classList.add("active");
+        }
+    </script>
+</body>
+</html>
+
